@@ -1,45 +1,38 @@
 import React, { useState } from 'react';
 import { Box, Heading, Button, Text } from '@chakra-ui/react';
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 
 function Tip() {
-    const stripe = useStripe();
-    const elements = useElements();
     const [paymentStatus, setPaymentStatus] = useState("");
-
-    const handleSubmit = async () => {
-        if (!stripe || !elements) {
-            return;
-        }
-
-        const cardElement = elements.getElement(CardElement);
-
-        const clientSecret = await fetch('/create-payment-intent', {
-            method: 'POST',
-        }).then(res => res.json()).then(data => data.clientSecret);
-
-        if (clientSecret) {
-            const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-                payment_method: { card: cardElement },
-            });
-
-            if (error) {
-                setPaymentStatus(`Payment failed: ${error.message}`);
-            } else if (paymentIntent.status === 'succeeded') {
-                setPaymentStatus("Payment succeeded! Thank you for your tip!");
-            }
-        }
-    };
 
     return (
         <Box textAlign="center" py={10}>
             <Heading>Tip Bar 62</Heading>
-            <form>
-                <CardElement />
-                <Button mt={5} colorScheme="blue" onClick={handleSubmit} disabled={!stripe}>
-                    Tip
-                </Button>
-            </form>
+            <PayPalScriptProvider options={{ "client-id": "YOUR_PAYPAL_CLIENT_ID" }}>
+                <PayPalButtons 
+                    createOrder={async () => {
+                        const res = await fetch('http://127.0.0.1:8000/create-paypal-order', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ amount: 10.00 })
+                        });
+                        const data = await res.json();
+                        return data.orderID;
+                    }}
+                    onApprove={async (data, actions) => {
+                        const res = await fetch(`http://127.0.0.1:8000/capture-paypal-order/${data.orderID}`, {
+                            method: 'POST'
+                        });
+                        const captureData = await res.json();
+                        setPaymentStatus("Payment successful! Thank you for your tip!");
+                    }}
+                    onError={(err) => {
+                        setPaymentStatus("Payment failed. Please try again.");
+                    }}
+                />
+            </PayPalScriptProvider>
             {paymentStatus && <Text mt={3}>{paymentStatus}</Text>}
         </Box>
     );

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^2.10.3",
+    "@paypal/react-paypal-js": "^8.7.0",
     "@stripe/react-stripe-js": "^2.9.0",
     "@stripe/stripe-js": "^4.10.0",
     "@testing-library/jest-dom": "^5.17.0",
