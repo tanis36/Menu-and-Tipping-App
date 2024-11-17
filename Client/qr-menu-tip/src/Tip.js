@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Heading, Button, Text } from '@chakra-ui/react';
+import { Box, Heading, Text } from '@chakra-ui/react';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 
 function Tip() {
@@ -8,7 +8,7 @@ function Tip() {
     return (
         <Box textAlign="center" py={10}>
             <Heading>Tip Bar 62</Heading>
-            <PayPalScriptProvider options={{ "client-id": "YOUR_PAYPAL_CLIENT_ID" }}>
+            <PayPalScriptProvider options={{ "client-id": "CLIENT_ID" }}>
                 <PayPalButtons 
                     createOrder={async () => {
                         const res = await fetch('http://127.0.0.1:8000/create-paypal-order', {

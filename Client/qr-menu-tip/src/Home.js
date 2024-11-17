@@ -1,5 +1,5 @@
 import React from 'react';
-import { VStack, Heading, Button } from '@chakra-ui/react';
+import { VStack, Button } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
 function Home() {

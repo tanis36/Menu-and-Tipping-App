@@ -2,7 +2,6 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import requests
-import os
 
 app = FastAPI()
 
@@ -14,8 +13,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-PAYPAL_CLIENT_ID = os.getenv("PAYPAL_CLIENT_ID")
-PAYPAL_SECRET = os.getenv("PAYPAL_SECRET")
+PAYPAL_CLIENT_ID = "CLIENT_ID"
+PAYPAL_SECRET = "SECRET"
 PAYPAL_API_BASE = "https://api-m.sandbox.paypal.com"
 
 class PaymentRequest(BaseModel):
@@ -41,7 +40,7 @@ async def create_paypal_order(request: PaymentRequest):
 
     response = requests.post(f"{PAYPAL_API_BASE}/v2/checkout/orders", json=order_data, headers=headers)
     if response.status_code != 201:
-        raise HTTPException(status_code=500, detail="Failsed to create PayPal order")
+        raise HTTPException(status_code=500, detail="Failed to create PayPal order")
     return {"orderID": response.json()["id"]}
 
 @app.post("/capture-paypal-order/{order_id}")
