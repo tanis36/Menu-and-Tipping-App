@@ -13,8 +13,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-PAYPAL_CLIENT_ID = "CLIENT_ID"
-PAYPAL_SECRET = "SECRET"
+PAYPAL_CLIENT_ID = "PAYPAL_CLIENT_ID"
+PAYPAL_SECRET = "PAYPAL_SECRET"
 PAYPAL_API_BASE = "https://api-m.sandbox.paypal.com"
 
 class PaymentRequest(BaseModel):
