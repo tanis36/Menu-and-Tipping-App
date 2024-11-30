@@ -64,8 +64,12 @@ function Tip() {
                     textAlign="center"
                 />
                 {error && <Text color="red.500">{error}</Text>}  {/* Display error message*/}
-                <PayPalScriptProvider options={{ "client-id": "client_id" }}>
-                    <PayPalButtons 
+                <PayPalScriptProvider
+                    options={{
+                        "client-id": "client_id",
+                        "enable-funding": "venmo"
+                    }}>
+                    <PayPalButtons
                         disabled={!isAmountValidRef.current}
                         createOrder={async () => {
                             console.log("createOrder triggered.")
@@ -82,7 +86,7 @@ function Tip() {
                             });
 
                             if (!res.ok) {
-                                throw new Error("Failed to create PayPal order.");
+                                throw new Error("Failed to create order.");
                             }
 
                             const data = await res.json();
